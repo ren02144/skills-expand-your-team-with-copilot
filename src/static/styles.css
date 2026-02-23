@@ -647,10 +647,11 @@ footer {
 }
 
 /* User controls in header */
+/* User controls in header */
 #user-controls {
   position: absolute;
   top: 10px;
-  right: 15px;
+  right: 70px;
 }
 
 #user-status {
@@ -719,9 +720,4 @@ footer {
 
 #theme-toggle:hover {
   background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* Adjust user-controls position when theme toggle is present */
-#user-controls {
-  right: 70px;
 }
