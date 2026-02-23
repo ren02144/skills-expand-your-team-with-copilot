@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `
         }
-        <button class="share-button" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}">
+        <button class="share-button">
           <span class="share-icon">🔗</span>
           <span>Share</span>
         </button>
@@ -987,14 +987,18 @@ document.addEventListener("DOMContentLoaded", () => {
           document.body.appendChild(textArea);
           textArea.select();
           try {
-            document.execCommand("copy");
-            showMessage("Link copied to clipboard!", "success");
-            // Close the share modal
-            const shareModal = document.getElementById("share-modal");
-            shareModal.classList.remove("show");
-            setTimeout(() => {
-              shareModal.classList.add("hidden");
-            }, 300);
+            const successful = document.execCommand("copy");
+            if (successful) {
+              showMessage("Link copied to clipboard!", "success");
+              // Close the share modal
+              const shareModal = document.getElementById("share-modal");
+              shareModal.classList.remove("show");
+              setTimeout(() => {
+                shareModal.classList.add("hidden");
+              }, 300);
+            } else {
+              showMessage("Failed to copy link. Please try again.", "error");
+            }
           } catch (err) {
             showMessage("Failed to copy link. Please try again.", "error");
             console.error("Error copying to clipboard:", err);
