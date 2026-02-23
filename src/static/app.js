@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
-  let currentDifficulty = "";
+  let currentDifficulty = "show-all"; // Default: show all activities
 
   // Authentication state
   let currentUser = null;
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentTimeRange = activeTimeFilter.dataset.time;
     }
 
-    // Initialize difficulty filter
+    // Initialize difficulty filter - default is "show-all" (no filter applied)
     const activeDifficultyFilter = document.querySelector(".difficulty-filter.active");
     if (activeDifficultyFilter) {
       currentDifficulty = activeDifficultyFilter.dataset.difficulty;
@@ -434,16 +434,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Apply difficulty filter
-      if (currentDifficulty !== "") {
+      if (currentDifficulty === "") {
         // "All" option (empty string) shows only activities with no difficulty specified
-        if (!details.difficulty) {
+        if (details.difficulty) {
           return;
         }
+      } else if (currentDifficulty !== "show-all") {
         // Specific difficulty levels show only matching activities
         if (details.difficulty !== currentDifficulty) {
           return;
         }
       }
+      // If currentDifficulty is "show-all", don't filter by difficulty at all
 
       // Apply weekend filter if selected
       if (currentTimeRange === "weekend" && details.schedule_details) {
