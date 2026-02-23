@@ -964,19 +964,43 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = `mailto:?subject=${encodeURIComponent(`Check out ${activityName}`)}&body=${encodedText}%0D%0A%0D%0A${encodedUrl}`;
         break;
       case "copy":
-        // Copy to clipboard
-        navigator.clipboard.writeText(pageUrl).then(() => {
-          showMessage("Link copied to clipboard!", "success");
-          // Close the share modal
-          const shareModal = document.getElementById("share-modal");
-          shareModal.classList.remove("show");
-          setTimeout(() => {
-            shareModal.classList.add("hidden");
-          }, 300);
-        }).catch((err) => {
-          showMessage("Failed to copy link. Please try again.", "error");
-          console.error("Error copying to clipboard:", err);
-        });
+        // Copy to clipboard with fallback for older browsers
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(pageUrl).then(() => {
+            showMessage("Link copied to clipboard!", "success");
+            // Close the share modal
+            const shareModal = document.getElementById("share-modal");
+            shareModal.classList.remove("show");
+            setTimeout(() => {
+              shareModal.classList.add("hidden");
+            }, 300);
+          }).catch((err) => {
+            showMessage("Failed to copy link. Please try again.", "error");
+            console.error("Error copying to clipboard:", err);
+          });
+        } else {
+          // Fallback for browsers without Clipboard API
+          const textArea = document.createElement("textarea");
+          textArea.value = pageUrl;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand("copy");
+            showMessage("Link copied to clipboard!", "success");
+            // Close the share modal
+            const shareModal = document.getElementById("share-modal");
+            shareModal.classList.remove("show");
+            setTimeout(() => {
+              shareModal.classList.add("hidden");
+            }, 300);
+          } catch (err) {
+            showMessage("Failed to copy link. Please try again.", "error");
+            console.error("Error copying to clipboard:", err);
+          }
+          document.body.removeChild(textArea);
+        }
         break;
     }
   }
