@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let searchQuery = "";
   let currentDay = "";
   let currentTimeRange = "";
-  let currentDifficulty = "show-all"; // Default: show all activities
+  let currentDifficulty = ""; // Default: show all activities (no filter)
 
   // Authentication state
   let currentUser = null;
@@ -434,18 +434,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Apply difficulty filter
-      if (currentDifficulty === "") {
-        // "All" option (empty string) shows only activities with no difficulty specified
+      if (currentDifficulty === "show-all") {
+        // "show-all" (default): Show only activities with no difficulty specified
         if (details.difficulty) {
           return;
         }
-      } else if (currentDifficulty !== "show-all") {
+      } else if (currentDifficulty !== "") {
         // Specific difficulty levels show only matching activities
         if (details.difficulty !== currentDifficulty) {
           return;
         }
       }
-      // If currentDifficulty is "show-all", don't filter by difficulty at all
+      // If currentDifficulty is "", don't filter by difficulty at all (show everything)
 
       // Apply weekend filter if selected
       if (currentTimeRange === "weekend" && details.schedule_details) {
